@@ -7,7 +7,7 @@ export default function App() {
 
   const [currentAccount, setCurrentAccount] = useState("");
   const [allWaves, setAllWaves] = useState([]);
-  const contractAddress = "0xDB54cf41675CbC5B32dD508CDF258EbE7B15dc3e";
+  const contractAddress = "0x7068CEeF275915798128eE95E0fA631596501c78";
   const contractABI = wavePortal.abi;
 
   const checkIfWalletIsConnected = async () => {
@@ -57,41 +57,30 @@ export default function App() {
   }
 
   const getAllWaves = async () => {
+    const { ethereum } = window;
     try {
-      const { ethereum } = window;
       if (ethereum) {
         const provider = new ethers.providers.Web3Provider(ethereum);
         const signer = provider.getSigner();
         const wavePortalContract = new ethers.Contract(contractAddress, contractABI, signer);
-
-        /*
-         * Chama o método getAllWaves do seu contrato inteligente
-         */
         const waves = await wavePortalContract.getAllWaves();
 
-        /*
-         * Apenas precisamos do endereço, data/horário, e mensagem na nossa tela, então vamos selecioná-los
-         */
-        let wavesCleaned = [];
-        waves.forEach(wave => {
-          wavesCleaned.push({
+        const wavesCleaned = waves.map(wave => {
+          return {
             address: wave.waver,
             timestamp: new Date(wave.timestamp * 1000),
-            message: wave.message
-          });
+            message: wave.message,
+          };
         });
 
-        /*
-         * Armazenando os dados
-         */
         setAllWaves(wavesCleaned);
       } else {
-        console.log("Objeto Ethereum não existe!")
+        console.log("Objeto Ethereum inexistente!");
       }
     } catch (error) {
       console.log(error);
     }
-  }
+  };
 
   const wave = async () => {
     try {
@@ -108,7 +97,7 @@ export default function App() {
         /*
         * Executar o tchauzinho a partir do contrato inteligente
         */
-        const waveTxn = await wavePortalContract.wave("esta é uma mensagem")
+        const waveTxn = await wavePortalContract.wave("esta é uma mensagem", { gasLimit: 300000 })
         console.log("Minerando...", waveTxn.hash);
 
         await waveTxn.wait();
@@ -124,9 +113,40 @@ export default function App() {
     }
   }
 
+  /**
+   * Escuta por eventos emitidos!
+   */
   useEffect(() => {
-    checkIfWalletIsConnected();
-  }, [])
+    let wavePortalContract;
+
+    const onNewWave = (from, timestamp, message) => {
+      console.log("NewWave", from, timestamp, message);
+      setAllWaves(prevState => [
+        ...prevState,
+        {
+          address: from,
+          timestamp: new Date(timestamp * 1000),
+          message: message,
+        },
+      ]);
+    };
+
+    if (window.ethereum) {
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner();
+
+      wavePortalContract = new ethers.Contract(contractAddress, contractABI, signer);
+      wavePortalContract.on("NewWave", onNewWave);
+    }
+
+    return () => {
+      if (wavePortalContract) {
+        wavePortalContract.off("NewWave", onNewWave);
+      }
+    };
+  }, []);
+
+
 
   return (
     <div className="mainContainer">
@@ -137,16 +157,15 @@ export default function App() {
         </div>
 
         <div className="bio">
-          Eu sou o vini black, quer mandar um salve? <br /> Conecte sua carteira Ethereum wallet e me manda um salve!
+        Eu sou o vini black, quer mandar um salve? <br /> Conecte sua carteira Ethereum wallet e me manda um salve!
         </div>
 
         <button className="waveButton" onClick={wave}>
-          Mandar salve 🌟
+          Mandar Salve 🌟
         </button>
         {/*
         * Se não existir currentAccount, apresente este botão
         */}
-        
         {!currentAccount && (
           <button className="waveButton" onClick={connectWallet}>
             Conectar carteira
