@@ -52,7 +52,7 @@ contract WavePortal {
         waves.push(Wave(msg.sender, _message, block.timestamp));
 
         /*
-         * Gera uma nova semente para o próximo usuário que mandar um tchauzinho
+         * Gera uma nova semente para o próximo usuário que acenar
          */
         seed = (block.difficulty + block.timestamp + seed) % 100;
 

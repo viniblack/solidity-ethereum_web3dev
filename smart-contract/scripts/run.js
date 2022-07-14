@@ -15,7 +15,7 @@ const main = async () => {
   );
 
   /*
-   * Vamos tentar mandar um tchauzinho 2 vezes agora
+   * Vamos tentar acenar 2 vezes agora
    */
   const waveTxn = await waveContract.wave("tchauzinho #1");
   await waveTxn.wait();
