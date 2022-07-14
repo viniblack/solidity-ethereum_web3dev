@@ -7,7 +7,7 @@ export default function App() {
 
   const [currentAccount, setCurrentAccount] = useState("");
   const [allWaves, setAllWaves] = useState([]);
-  const contractAddress = "0x7068CEeF275915798128eE95E0fA631596501c78";
+  const contractAddress = "0xd5617b8c85c476a6E7549b52e555147D11aa5B98";
   const contractABI = wavePortal.abi;
 
   const checkIfWalletIsConnected = async () => {
@@ -85,6 +85,9 @@ export default function App() {
   const wave = async () => {
     try {
       const { ethereum } = window;
+
+      console.log(window);
+      console.log(ethereum);
 
       if (ethereum) {
         const provider = new ethers.providers.Web3Provider(ethereum);
