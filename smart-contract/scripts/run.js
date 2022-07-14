@@ -15,13 +15,14 @@ const main = async () => {
   );
 
   /*
-   * Vamos tentar acenar 2 vezes agora
+   * Vamos tentar mandar um tchauzinho 2 vezes agora
    */
   const waveTxn = await waveContract.wave("tchauzinho #1");
   await waveTxn.wait();
 
-  const waveTxn2 = await waveContract.wave("tchauzinho #2");
-  await waveTxn2.wait();
+  // Teste para ver se esta dando erro quando tento mandar um salve antes de 15 min
+  // const waveTxn2 = await waveContract.wave("tchauzinho #2");
+  // await waveTxn2.wait();
 
   contractBalance = await hre.ethers.provider.getBalance(waveContract.address);
   console.log(

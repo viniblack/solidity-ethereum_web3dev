@@ -37,7 +37,7 @@ contract WavePortal {
          * Precisamos garantir que o valor corrente de timestamp é ao menos 15 minutos maior que o último timestamp armazenado
          */
         require(
-            lastWavedAt[msg.sender] + 15 minutes < block.timestamp,
+            lastWavedAt[msg.sender] + 1 seconds < block.timestamp,
             "Espere 15m"
         );
 
@@ -52,7 +52,7 @@ contract WavePortal {
         waves.push(Wave(msg.sender, _message, block.timestamp));
 
         /*
-         * Gera uma nova semente para o próximo usuário que acenar
+         * Gera uma nova semente para o próximo usuário que mandar um tchauzinho
          */
         seed = (block.difficulty + block.timestamp + seed) % 100;
 
