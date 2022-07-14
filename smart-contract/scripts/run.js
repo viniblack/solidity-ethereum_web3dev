@@ -6,9 +6,6 @@ const main = async () => {
   await waveContract.deployed();
   console.log("Endereço do contrato:", waveContract.address);
 
-  /*
-   * Consulta saldo do contrato
-   */
   let contractBalance = await hre.ethers.provider.getBalance(
     waveContract.address
   );
@@ -18,17 +15,17 @@ const main = async () => {
   );
 
   /*
-   * Enviar tchauzinho
+   * Vamos tentar mandar um tchauzinho 2 vezes agora
    */
-  let waveTxn = await waveContract.wave("Uma mensagem!");
+  const waveTxn = await waveContract.wave("tchauzinho #1");
   await waveTxn.wait();
 
-  /*
-   * Recupera o saldo do contrato para verificar o que aconteceu!
-   */
+  const waveTxn2 = await waveContract.wave("tchauzinho #2");
+  await waveTxn2.wait();
+
   contractBalance = await hre.ethers.provider.getBalance(waveContract.address);
   console.log(
-    "Saldo do  contrato:",
+    "Saldo do contrato:",
     hre.ethers.utils.formatEther(contractBalance)
   );
 
