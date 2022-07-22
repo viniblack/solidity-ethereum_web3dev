@@ -7,7 +7,7 @@ export default function App() {
 
   const [currentAccount, setCurrentAccount] = useState("");
   const [allWaves, setAllWaves] = useState([]);
-  const contractAddress = "0xd5617b8c85c476a6E7549b52e555147D11aa5B98";
+  const contractAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
   const contractABI = wavePortal.abi;
 
   const checkIfWalletIsConnected = async () => {
