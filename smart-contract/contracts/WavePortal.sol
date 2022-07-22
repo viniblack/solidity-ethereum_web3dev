@@ -76,6 +76,7 @@ contract WavePortal {
     }
 
     function getTotalWaves() public view returns (uint256) {
+        console.log("Temos %d tchauzinhos no total!", totalWaves);
         return totalWaves;
     }
 }

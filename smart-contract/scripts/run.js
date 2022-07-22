@@ -32,6 +32,10 @@ const main = async () => {
 
   let allWaves = await waveContract.getAllWaves();
   console.log(allWaves);
+
+  let waveCount;
+  waveCount = await waveContract.getTotalWaves();
+  console.log(waveCount.toNumber());
 };
 
 const runMain = async () => {
