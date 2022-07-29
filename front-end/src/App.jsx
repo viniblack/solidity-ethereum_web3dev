@@ -7,7 +7,7 @@ export default function App() {
 
   const [currentAccount, setCurrentAccount] = useState("");
   const [allWaves, setAllWaves] = useState([]);
-  const contractAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
+  const contractAddress = "0x3B785Ba4d72951962BfC9F7619130f722Efb18e1";
   const contractABI = wavePortal.abi;
 
   const checkIfWalletIsConnected = async () => {
@@ -27,6 +27,7 @@ export default function App() {
         const account = accounts[0];
         console.log("Encontrada a conta autorizada:", account);
         setCurrentAccount(account)
+        getAllWaves();
       } else {
         console.log("Nenhuma conta autorizada foi encontrada")
       }
@@ -38,7 +39,7 @@ export default function App() {
   /**
   * Implemente aqui o seu método connectWallet
   */
-  const connectWallet = async () => {
+   const connectWallet = async () => {
     try {
       const { ethereum } = window;
 
@@ -58,13 +59,14 @@ export default function App() {
 
   const getAllWaves = async () => {
     const { ethereum } = window;
+  
     try {
       if (ethereum) {
         const provider = new ethers.providers.Web3Provider(ethereum);
         const signer = provider.getSigner();
         const wavePortalContract = new ethers.Contract(contractAddress, contractABI, signer);
         const waves = await wavePortalContract.getAllWaves();
-
+  
         const wavesCleaned = waves.map(wave => {
           return {
             address: wave.waver,
@@ -72,7 +74,7 @@ export default function App() {
             message: wave.message,
           };
         });
-
+  
         setAllWaves(wavesCleaned);
       } else {
         console.log("Objeto Ethereum inexistente!");
@@ -120,8 +122,8 @@ export default function App() {
    * Escuta por eventos emitidos!
    */
   useEffect(() => {
+    checkIfWalletIsConnected();
     let wavePortalContract;
-
     const onNewWave = (from, timestamp, message) => {
       console.log("NewWave", from, timestamp, message);
       setAllWaves(prevState => [
@@ -149,42 +151,40 @@ export default function App() {
     };
   }, []);
 
-
-
   return (
     <div className="mainContainer">
 
-      <div className="dataContainer">
-        <div className="header">
-          👋 Olá Pessoal!
-        </div>
-
-        <div className="bio">
-        Eu sou o vini black, quer mandar um salve? <br /> Conecte sua carteira Ethereum wallet e me manda um salve!
-        </div>
-
-        <button className="waveButton" onClick={wave}>
-          Mandar Salve 🌟
-        </button>
-        {/*
-        * Se não existir currentAccount, apresente este botão
-        */}
-        {!currentAccount && (
-          <button className="waveButton" onClick={connectWallet}>
-            Conectar carteira
-          </button>
-        )}
-
-        {allWaves.map((wave, index) => {
-          return (
-            <div key={index} style={{ backgroundColor: "OldLace", marginTop: "16px", padding: "8px" }}>
-              <div>Endereço: {wave.address}</div>
-              <div>Data/Horário: {wave.timestamp.toString()}</div>
-              <div>Mensagem: {wave.message}</div>
-            </div>)
-        })}
+    <div className="dataContainer">
+      <div className="header">
+      👋 Olá Pessoal!
       </div>
 
+      <div className="bio">
+      Eu sou o vini black, quer mandar um salve? <br /> Conecte sua carteira Ethereum wallet e me manda um salve!
+      </div>
+
+      <button className="waveButton" onClick={wave}>
+        Mandar Salve 🌟
+      </button>
+      {/*
+      * Se não existir currentAccount, apresente este botão
+      */}
+      {!currentAccount && (
+        <button className="waveButton" onClick={connectWallet}>
+          Conectar carteira
+        </button>
+      )}
+
+      {allWaves.map((wave, index) => {
+        return (
+          <div key={index} style={{ backgroundColor: "OldLace", marginTop: "16px", padding: "8px" }}>
+            <div>Endereço: {wave.address}</div>
+            <div>Data/Horário: {wave.timestamp.toString()}</div>
+            <div>Mensagem: {wave.message}</div>
+          </div>)
+      })}
     </div>
+    
+  </div>
   );
 }

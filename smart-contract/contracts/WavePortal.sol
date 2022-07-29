@@ -37,7 +37,7 @@ contract WavePortal {
          * Precisamos garantir que o valor corrente de timestamp é ao menos 15 minutos maior que o último timestamp armazenado
          */
         require(
-            lastWavedAt[msg.sender] + 1 seconds < block.timestamp,
+            lastWavedAt[msg.sender] + 15 minutes < block.timestamp,
             "Espere 15m"
         );
 
@@ -52,7 +52,7 @@ contract WavePortal {
         waves.push(Wave(msg.sender, _message, block.timestamp));
 
         /*
-         * Gera uma nova semente para o próximo usuário que mandar um tchauzinho
+         * Gera uma nova semente para o próximo usuário que acenar
          */
         seed = (block.difficulty + block.timestamp + seed) % 100;
 
@@ -76,7 +76,6 @@ contract WavePortal {
     }
 
     function getTotalWaves() public view returns (uint256) {
-        console.log("Temos %d tchauzinhos no total!", totalWaves);
         return totalWaves;
     }
 }

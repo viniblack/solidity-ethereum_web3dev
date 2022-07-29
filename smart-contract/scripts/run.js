@@ -15,12 +15,11 @@ const main = async () => {
   );
 
   /*
-   * Vamos tentar mandar um tchauzinho 2 vezes agora
+   * Vamos tentar acenar 2 vezes agora
    */
   const waveTxn = await waveContract.wave("tchauzinho #1");
   await waveTxn.wait();
 
-  // Teste para ver se esta dando erro quando tento mandar um salve antes de 15 min
   // const waveTxn2 = await waveContract.wave("tchauzinho #2");
   // await waveTxn2.wait();
 
@@ -32,10 +31,6 @@ const main = async () => {
 
   let allWaves = await waveContract.getAllWaves();
   console.log(allWaves);
-
-  let waveCount;
-  waveCount = await waveContract.getTotalWaves();
-  console.log(waveCount.toNumber());
 };
 
 const runMain = async () => {
